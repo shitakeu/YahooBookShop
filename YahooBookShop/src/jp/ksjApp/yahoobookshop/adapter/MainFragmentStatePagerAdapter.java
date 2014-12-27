@@ -1,8 +1,7 @@
 package jp.ksjApp.yahoobookshop.adapter;
 
+import jp.ksjApp.yahoobookshop.Const;
 import jp.ksjApp.yahoobookshop.fragment.RankingFragment;
-import jp.ksjApp.yahoobookshop.fragment.Fragment1;
-import jp.ksjApp.yahoobookshop.fragment.Fragment2;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,11 +18,15 @@ public class MainFragmentStatePagerAdapter
 
     switch(i){
     case 0:
-      return new RankingFragment();
+    	return new RankingFragment(Const.BOOK_GENRE_MAIN);
     case 1:
-      return new Fragment1();
+    	RankingFragment maleRankingFragment = new RankingFragment(Const.BOOK_GENRE_MAIN);
+    	maleRankingFragment.setGender(Const.GENDER_MALE);
+    	return maleRankingFragment;
     default:
-      return new Fragment2();
+    	RankingFragment femaleRankingFragment = new RankingFragment(Const.BOOK_GENRE_MAIN);
+    	femaleRankingFragment.setGender(Const.GENDER_FEMALE);
+    	return femaleRankingFragment;
     }
 
   }
@@ -39,13 +42,13 @@ public class MainFragmentStatePagerAdapter
 	  String titleName = "";
 	  switch (position) {
 	  case 0:
-		  titleName = "ランキング";
+		  titleName = "総合ランキング";
 		  break;
 	  case 1:
-		  titleName = "テスト①";
+		  titleName = "男性ランキング";
 		  break;
 	  case 2:
-		  titleName = "テスト②";
+		  titleName = "女性ランキング";
 		break;
 
 	  default:

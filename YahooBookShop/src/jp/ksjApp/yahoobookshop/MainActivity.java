@@ -4,6 +4,7 @@ import jp.ksjApp.yahoobookshop.adapter.MainFragmentStatePagerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
@@ -15,15 +16,15 @@ public class MainActivity extends FragmentActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getWindow().setSoftInputMode(
+				LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		setupView();
 	}
 
-	/**
-	 * 
-	 */
+
 	private void setupView() {
 		final EditText editText = (EditText) findViewById(R.id.edit_word);
 		editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -1,16 +1,23 @@
 package jp.ksjApp.yahoobookshop.fragment;
 
+import java.util.ArrayList;
+
 import jp.ksjApp.yahoobookshop.Const;
+import jp.ksjApp.yahoobookshop.ItemData;
 import jp.ksjApp.yahoobookshop.R;
+import jp.ksjApp.yahoobookshop.adapter.RankingAdapter;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.GridView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,17 +31,41 @@ import com.android.volley.toolbox.Volley;
 
 public class RankingFragment extends Fragment {
 
+	@SuppressWarnings("unused")
 	private static final String TAG = RankingFragment.class.getSimpleName();
 
 	private RequestQueue mQueue;
+	private GridView mGridView;
+	private Point mPoint;
 	
-	private TextView mTxt;
+	private String mCategoryId;
+	
+	private String mGender;
 
+	public RankingFragment(String genreId) {
+		super();
+		mCategoryId = genreId;
+	}
+	
+	public void setGender(int type){
+		
+		if(type == Const.GENDER_MALE){
+			mGender = "male";
+		}else if(type == Const.GENDER_FEMALE){
+			mGender = "female";
+		}
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.ranking_fragment, null);
-		mTxt =(TextView) view.findViewById(R.id.test);
+		mGridView = (GridView) view.findViewById(R.id.gridView);
+		 
+		final Display disp = getActivity().getWindowManager().getDefaultDisplay();
+		mPoint = new Point();
+		disp.getSize(mPoint);
+		
 		return view;
 	}
 
@@ -46,13 +77,12 @@ public class RankingFragment extends Fragment {
 
 	@Override
 	public void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 	}
 
 	private void request() {
 
-		final String url = Const.YAHOO_SHOP_CATEGORY_RANKING_API_URL;
+		final String url = createUrl();
 
 		mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
 		mQueue.add(new JsonObjectRequest(Method.GET, url, null,
@@ -61,21 +91,23 @@ public class RankingFragment extends Fragment {
 					public void onResponse(JSONObject response) {
 						JSONObject resultSet;
 						try {
+							
+							ArrayList<ItemData> itemData = new ArrayList<ItemData>();
 							resultSet = response.getJSONObject("ResultSet").getJSONObject("0").getJSONObject("Result");
-							StringBuffer sb = new StringBuffer();
 							for (int i = 0; i < 20; i++) {
+								final ItemData data = new ItemData();
 								final String index = String.valueOf(i);
 								JSONObject item = resultSet.getJSONObject(index);
-								
-								item.getString("Name");
-								item.getString("Url");
-								item.getJSONObject("Image").getString("Medium");
-								item.getJSONObject("Store").getString("Name");
-								
-								sb.append(item.getString("Name"));
-								sb.append("\n");
+								data.name = item.getString("Name");
+								data.url = item.getString("Url");
+								data.thumbnailUrl = item.getJSONObject("Image").getString("Medium");
+								data.publisherName = item.getJSONObject("Store").getString("Name");
+								itemData.add(data);
 							}
-							mTxt.setText(sb);
+							
+							final RankingAdapter adapter = new RankingAdapter(getActivity().getApplicationContext(), itemData, mQueue, mPoint);
+							mGridView.setAdapter(adapter);
+							
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -90,5 +122,26 @@ public class RankingFragment extends Fragment {
 				}));
 
 	}
+	/**
+	 * リクエストパラメータを付けてAPIのエントリーポイントを返す
+	 * @return urlString 
+	 */
+	private String createUrl() {
+		final StringBuffer strbuf = new StringBuffer();
+		strbuf.append(Const.YAHOO_SHOP_CATEGORY_RANKING_API_URL);
+		strbuf.append("&");
+		strbuf.append("category_id=" + mCategoryId);
+		
+		if(TextUtils.isEmpty(mGender) == false){
+			strbuf.append("&");
+			strbuf.append("gender=" + mGender);
+		}
+
+		if(Const._DEBUG_){
+			Log.d(TAG, "url : " + strbuf.toString());
+		}
+		return strbuf.toString();
+	}
+	
 
 }
