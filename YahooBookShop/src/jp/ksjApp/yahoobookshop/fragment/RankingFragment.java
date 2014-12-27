@@ -6,10 +6,10 @@ import jp.ksjApp.yahoobookshop.Const;
 import jp.ksjApp.yahoobookshop.ItemData;
 import jp.ksjApp.yahoobookshop.R;
 import jp.ksjApp.yahoobookshop.adapter.RankingAdapter;
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -38,10 +38,16 @@ public class RankingFragment extends Fragment {
 	private GridView mGridView;
 	private Point mPoint;
 	
+	//本内のカテゴリID
 	private String mCategoryId;
 	
+	//性別
 	private String mGender;
 
+	// 指定した順位を20位毎に表示
+	private int mOffset = 1;
+	private static final int TOTAL_RESULTS_RETURNED = 20;
+	
 	public RankingFragment(String genreId) {
 		super();
 		mCategoryId = genreId;
@@ -83,8 +89,9 @@ public class RankingFragment extends Fragment {
 	private void request() {
 
 		final String url = createUrl();
-
-		mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+		final Context context = getActivity().getApplicationContext();
+		
+		mQueue = Volley.newRequestQueue(context);
 		mQueue.add(new JsonObjectRequest(Method.GET, url, null,
 				new Listener<JSONObject>() {
 					@Override
@@ -105,8 +112,11 @@ public class RankingFragment extends Fragment {
 								itemData.add(data);
 							}
 							
-							final RankingAdapter adapter = new RankingAdapter(getActivity().getApplicationContext(), itemData, mQueue, mPoint);
+							final RankingAdapter adapter = new RankingAdapter(context, itemData, mQueue, mPoint);
 							mGridView.setAdapter(adapter);
+							
+							//　次回リクエスト時のオフセットを20件進める
+							mOffset += TOTAL_RESULTS_RETURNED;
 							
 						} catch (JSONException e) {
 							e.printStackTrace();
@@ -131,6 +141,11 @@ public class RankingFragment extends Fragment {
 		strbuf.append(Const.YAHOO_SHOP_CATEGORY_RANKING_API_URL);
 		strbuf.append("&");
 		strbuf.append("category_id=" + mCategoryId);
+		
+		final int offset = mOffset + TOTAL_RESULTS_RETURNED;
+		strbuf.append("&");
+		strbuf.append("mOffset=" + mOffset);
+		
 		
 		if(TextUtils.isEmpty(mGender) == false){
 			strbuf.append("&");

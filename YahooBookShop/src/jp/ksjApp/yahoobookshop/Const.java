@@ -27,7 +27,22 @@ public class Const {
 	public static final int GENDER_FEMALE = 1;
 	
 	// ジャンルID
+	//　総合
 	public static final String BOOK_GENRE_MAIN = "10002";
+	//　コミック
+	public static final String BOOK_GENRE_COMIC = "10251";
+	//　文芸
+	public static final String BOOK_GENRE_LITERATURE = "12492";
+	//　雑誌
+	public static final String BOOK_GENRE_MAGAZINE = "10003";
+	//　写真集
+	public static final String BOOK_GENRE_PHOTO = "10141";
+	//　ビジネス
+	public static final String BOOK_GENRE_BUSINESS = "10725";
+	//　コンピュータ
+	public static final String BOOK_GENRE_COMPUTER = "10604";
+	
+	
 	public static final String INTENT_KEY_SEARCH_GENRE_ID = "search_genre_id";
 	public static final String INTENT_KEY_SEARCH_GENRE_TITLE = "search_genre_title";
 
