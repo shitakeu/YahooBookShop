@@ -1,0 +1,3 @@
+[submodule "YahooBookShop/modules/volley"]
+	path = YahooBookShop/modules/volley
+	url = https://android.googlesource.com/platform/frameworks/volley

@@ -1,6 +1,6 @@
 package jp.ksjApp.yahoobookshop.adapter;
 
-import jp.ksjApp.yahoobookshop.fragment.Fragment0;
+import jp.ksjApp.yahoobookshop.fragment.RankingFragment;
 import jp.ksjApp.yahoobookshop.fragment.Fragment1;
 import jp.ksjApp.yahoobookshop.fragment.Fragment2;
 import android.support.v4.app.Fragment;
@@ -19,7 +19,7 @@ public class MainFragmentStatePagerAdapter
 
     switch(i){
     case 0:
-      return new Fragment0();
+      return new RankingFragment();
     case 1:
       return new Fragment1();
     default:
@@ -39,13 +39,13 @@ public class MainFragmentStatePagerAdapter
 	  String titleName = "";
 	  switch (position) {
 	  case 0:
-		  titleName = "総合ランキング";
+		  titleName = "繝ｩ繝ｳ繧ｭ繝ｳ繧ｰ";
 		  break;
 	  case 1:
-		  titleName = "キャンペーン";
+		  titleName = "繝�繧ｹ繝遺蔵";
 		  break;
 	  case 2:
-		  titleName = "閲覧履歴";
+		  titleName = "繝�繧ｹ繝遺贈";
 		break;
 
 	  default:
