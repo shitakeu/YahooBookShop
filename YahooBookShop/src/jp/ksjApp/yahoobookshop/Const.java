@@ -18,7 +18,7 @@ public class Const {
 //	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?affiliate_type=yid&appid="
 //			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
 	
-	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?affiliate_type=yid&hits=50&image_size=600&appid="
+	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?affiliate_type=yid&hits=50&image_size=300&appid="
 			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
 	
 

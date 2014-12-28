@@ -121,8 +121,9 @@ public class RankingFragment extends Fragment {
 								JSONObject item = resultSet.getJSONObject(index);
 								data.name = item.getString("Name");
 								data.url = item.getString("Url");
-								data.thumbnailUrl = item.getJSONObject("Image").getString("Medium");
+								data.thumbnailUrl = item.getJSONObject("ExImage").getString("Url");
 								data.publisherName = item.getJSONObject("Store").getString("Name");
+								data.price = item.getJSONObject("PriceLabel").getString("DefaultPrice");
 								itemData.add(data);
 							}
 							
