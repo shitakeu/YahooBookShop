@@ -75,6 +75,8 @@ public class RankingAdapter extends BaseAdapter {
 					.findViewById(R.id.text_name);
 			holder.priceView = (TextView) convertView
 					.findViewById(R.id.text_price);
+			holder.publisherView = (TextView) convertView
+					.findViewById(R.id.text_publisher);
 
 			final int imgWidth = (int)mPoint.x / 2;
 			holder.imageView.setMinimumWidth(imgWidth);
@@ -98,7 +100,8 @@ public class RankingAdapter extends BaseAdapter {
 		mImageLoader.get(imageUrl, listener); /* URLから画像を取得する */
 
 		holder.nameView.setText(item.name);
-		holder.priceView .setText(item.price + "円");
+		holder.priceView.setText(item.price + "円");
+		holder.publisherView.setText(item.publisherName);
 		
 		final int height = holder.imageView.getHeight() + holder.nameView.getHeight() + holder.priceView.getHeight();
 		convertView.setMinimumHeight(height);
@@ -122,6 +125,7 @@ public class RankingAdapter extends BaseAdapter {
 		ImageView imageView;
 		TextView nameView;
 		TextView priceView;
+		TextView publisherView;
 	}
 
 	/**

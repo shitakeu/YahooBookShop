@@ -50,7 +50,7 @@ public class MainFragmentStatePagerAdapter
 
   @Override
   public int getCount() {
-    return 9;
+    return 12;
   }
 
   @Override

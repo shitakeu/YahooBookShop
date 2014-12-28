@@ -1,7 +1,6 @@
 package jp.ksjApp.yahoobookshop;
 
 import jp.ksjApp.yahoobookshop.adapter.MainFragmentStatePagerAdapter;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager.LayoutParams;
@@ -11,8 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 public class MainActivity extends FragmentActivity {
-
-	ViewPager mViewPager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +40,7 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
 		
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(
-	      new MainFragmentStatePagerAdapter(
-	        getSupportFragmentManager()));
+		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager.setAdapter(new MainFragmentStatePagerAdapter(getSupportFragmentManager()));
 	}
 }
