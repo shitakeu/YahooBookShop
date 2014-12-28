@@ -12,10 +12,15 @@ public class Const {
 	public static final String YAHOO_APP_ID = "dj0zaiZpPTFVVms2TVk5a3pNQSZzPWNvbnN1bWVyc2VjcmV0Jng9NzU-";
 	public static final String YAHOO_AFFILIATEI_ID = "onlgl89gRKBbvvpOFlOZ";
 
+	// ※ランキングAPIに不具合があったためこちらは使わない
 	// YahooショッピングカテゴリランキングAPI
 	// http://developer.yahoo.co.jp/webapi/shopping/shopping/v1/categoryranking.html
-	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?affiliate_type=yid&appid="
+//	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?affiliate_type=yid&appid="
+//			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
+	
+	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?affiliate_type=yid&hits=50&image_size=600&appid="
 			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
+	
 
 	// Yahoo商品検索API
 	// http://developer.yahoo.co.jp/webapi/shopping/shopping/v1/itemsearch.html
@@ -41,6 +46,17 @@ public class Const {
 	public static final String BOOK_GENRE_BUSINESS = "10725";
 	//　コンピュータ
 	public static final String BOOK_GENRE_COMPUTER = "10604";
+	
+	//　エンターテインメント
+	public static final String BOOK_GENRE_ENTERTAINMENT = "10149";
+	//生活
+	public static final String BOOK_GENRE_LIFE = "12243";
+	//趣味
+	public static final String BOOK_GENRE_HOBBY = "11998";
+	//歴史、心理、教育
+	public static final String BOOK_GENRE_HISTORY = "13190";
+	//学習参考書
+	public static final String BOOK_GENRE_LEARNING = "11270";
 	
 	
 	public static final String INTENT_KEY_SEARCH_GENRE_ID = "search_genre_id";

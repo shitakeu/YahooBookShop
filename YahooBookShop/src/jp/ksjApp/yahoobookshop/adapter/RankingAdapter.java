@@ -57,6 +57,10 @@ public class RankingAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return 0;
 	}
+	
+	public void addItem(ArrayList<ItemData> itemData) {
+		mItemData.addAll(itemData);
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

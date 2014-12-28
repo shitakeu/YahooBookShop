@@ -21,27 +21,27 @@ public class MainFragmentStatePagerAdapter
     	// 総合ランキング
     	return new RankingFragment(Const.BOOK_GENRE_MAIN);
     case 1:
-    	// 総合ランキング（男性）
-    	RankingFragment maleRankingFragment = new RankingFragment(Const.BOOK_GENRE_MAIN);
-    	maleRankingFragment.setGender(Const.GENDER_MALE);
-    	return maleRankingFragment;
-    case 2:
-    	// 総合ランキング（女性）
-    	RankingFragment femaleRankingFragment = new RankingFragment(Const.BOOK_GENRE_MAIN);
-    	femaleRankingFragment.setGender(Const.GENDER_FEMALE);
-    	return femaleRankingFragment;
-    case 3:
     	return new RankingFragment(Const.BOOK_GENRE_COMIC);
-    case 4:
+    case 2:
     	return new RankingFragment(Const.BOOK_GENRE_LITERATURE);
-    case 5:
+    case 3:
     	return new RankingFragment(Const.BOOK_GENRE_MAGAZINE);
-    case 6:
+    case 4:
     	return new RankingFragment(Const.BOOK_GENRE_PHOTO);
-    case 7:
+    case 5:
     	return new RankingFragment(Const.BOOK_GENRE_BUSINESS);
-    case 8:
+    case 6:
     	return new RankingFragment(Const.BOOK_GENRE_COMPUTER);
+    case 7:
+    	return new RankingFragment(Const.BOOK_GENRE_ENTERTAINMENT);
+    case 8:
+    	return new RankingFragment(Const.BOOK_GENRE_LIFE);
+    case 9:
+    	return new RankingFragment(Const.BOOK_GENRE_HOBBY);
+    case 10:
+    	return new RankingFragment(Const.BOOK_GENRE_HISTORY);
+    case 11:
+    	return new RankingFragment(Const.BOOK_GENRE_LEARNING);
     default:
     	return new RankingFragment(Const.BOOK_GENRE_MAIN);
     }
@@ -62,31 +62,40 @@ public class MainFragmentStatePagerAdapter
 		  titleName = "総合ランキング";
 		  break;
 	  case 1:
-		  titleName = "男性向け";
+		  titleName = "コミック、アニメ";
 		  break;
 	  case 2:
-		  titleName = "女性向け";
-		break;
-	  case 3:
-		  titleName = "コミック、アニメ";
-		break;
-	  case 4:
 		  titleName = "文芸書籍";
 		break;
-	  case 5:
+	  case 3:
 		  titleName = "雑誌";
 		break;
-	  case 6:
+	  case 4:
 		  titleName = "写真集";
 		break;
-	  case 7:
+	  case 5:
 		  titleName = "ビジネス";
 		break;
-	  case 8:
+	  case 6:
 		  titleName = "コンピュータ";
 		break;
-		
+	  case 7:
+		  titleName = "エンターテインメント";
+		break;
+	  case 8:
+		  titleName = "生活";
+		break;
+	  case 9:
+		  titleName = "趣味";
+		break;
+	  case 10:
+		  titleName = "歴史、心理、教育";
+		break;
+	  case 11:
+		  titleName = "学習";
+		break;
 	  default:
+		  titleName = "その他";
 		break;
 	}
 	  

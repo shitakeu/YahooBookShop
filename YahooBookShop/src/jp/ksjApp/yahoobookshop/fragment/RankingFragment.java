@@ -16,7 +16,9 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
+import android.widget.AbsListView.OnScrollListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,28 +40,30 @@ public class RankingFragment extends Fragment {
 	private GridView mGridView;
 	private Point mPoint;
 	
+	// スクロール中
+	private Boolean mScrolling = false;
+	
 	//本内のカテゴリID
 	private String mCategoryId;
 	
 	//性別
 	private String mGender;
+	
+	RankingAdapter mRankingAdapter;
+	
 
+	private boolean isLoad = false;
+	
 	// 指定した順位を20位毎に表示
 	private int mOffset = 1;
-	private static final int TOTAL_RESULTS_RETURNED = 20;
+	// APIから取得する件数
+	private static final int TOTAL_RESULTS_RETURNED = 50;
+	// 最大取得件数　
+	private static final int LIMIT_TOTAL_RESULTS = 200;
 	
 	public RankingFragment(String genreId) {
 		super();
 		mCategoryId = genreId;
-	}
-	
-	public void setGender(int type){
-		
-		if(type == Const.GENDER_MALE){
-			mGender = "male";
-		}else if(type == Const.GENDER_FEMALE){
-			mGender = "female";
-		}
 	}
 	
 	@Override
@@ -67,10 +71,18 @@ public class RankingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.ranking_fragment, null);
 		mGridView = (GridView) view.findViewById(R.id.gridView);
-		 
+		
+		final Context context = getActivity().getApplicationContext();
+		mQueue = Volley.newRequestQueue(context);
+		
 		final Display disp = getActivity().getWindowManager().getDefaultDisplay();
 		mPoint = new Point();
 		disp.getSize(mPoint);
+		
+		mRankingAdapter = new RankingAdapter(context, new ArrayList<ItemData>(), mQueue, mPoint);
+		mGridView.setAdapter(mRankingAdapter);
+		
+		mGridView.setOnScrollListener(new GridViewOnScrollListener());
 		
 		return view;
 	}
@@ -88,18 +100,20 @@ public class RankingFragment extends Fragment {
 
 	private void request() {
 
-		final String url = createUrl();
-		final Context context = getActivity().getApplicationContext();
+		if(isLoad){
+			return;
+		}
 		
-		mQueue = Volley.newRequestQueue(context);
+		isLoad = true;
+		final String url = createUrl();
+
 		mQueue.add(new JsonObjectRequest(Method.GET, url, null,
 				new Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						JSONObject resultSet;
 						try {
-							
-							ArrayList<ItemData> itemData = new ArrayList<ItemData>();
+							final ArrayList<ItemData> itemData = new ArrayList<ItemData>();
 							resultSet = response.getJSONObject("ResultSet").getJSONObject("0").getJSONObject("Result");
 							for (int i = 0; i < 20; i++) {
 								final ItemData data = new ItemData();
@@ -112,15 +126,26 @@ public class RankingFragment extends Fragment {
 								itemData.add(data);
 							}
 							
-							final RankingAdapter adapter = new RankingAdapter(context, itemData, mQueue, mPoint);
-							mGridView.setAdapter(adapter);
+							mRankingAdapter.addItem(itemData);
+							
+							// アダプターにデータ変更の通知
+							mRankingAdapter.notifyDataSetChanged();
+							// GridViewの再描画
+							mGridView.invalidateViews();
 							
 							//　次回リクエスト時のオフセットを20件進める
 							mOffset += TOTAL_RESULTS_RETURNED;
 							
+							if( LIMIT_TOTAL_RESULTS < mOffset) {
+								// 最大件数を超えた場合これ以上リクエストしないようにリスナーを削除する
+								mGridView.setOnScrollListener(null);
+							}
+							
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
+						
+						isLoad = false;
 					}
 				},
 				new Response.ErrorListener() {
@@ -128,6 +153,8 @@ public class RankingFragment extends Fragment {
 					public void onErrorResponse(VolleyError error) {
 						// エラー処理 error.networkResponseで確認
 						// エラー表示など
+						
+						isLoad = false;
 					}
 				}));
 
@@ -141,10 +168,8 @@ public class RankingFragment extends Fragment {
 		strbuf.append(Const.YAHOO_SHOP_CATEGORY_RANKING_API_URL);
 		strbuf.append("&");
 		strbuf.append("category_id=" + mCategoryId);
-		
-		final int offset = mOffset + TOTAL_RESULTS_RETURNED;
 		strbuf.append("&");
-		strbuf.append("mOffset=" + mOffset);
+		strbuf.append("offset=" + mOffset);
 		
 		
 		if(TextUtils.isEmpty(mGender) == false){
@@ -158,5 +183,74 @@ public class RankingFragment extends Fragment {
 		return strbuf.toString();
 	}
 	
+	/*
+	 * スクローラーの状態検知
+	 */
+	public class GridViewOnScrollListener implements OnScrollListener {
+
+		/*
+		 * ステータスが変わった時
+		 * 
+		 * @see
+		 * android.widget.AbsListView.OnScrollListener#onScrollStateChanged(
+		 * android.widget.AbsListView, int)
+		 */
+		@Override
+		public void onScrollStateChanged(AbsListView paramAbsListView,
+				int scrollState) {
+			switch (scrollState) {
+
+			// スクロール停止
+			case OnScrollListener.SCROLL_STATE_IDLE:
+
+				// decode処理をqueueに登録して開始する記述
+				mScrolling = false;
+
+				// アダプターにデータ変更の通知
+				mRankingAdapter.notifyDataSetChanged();
+				// GridViewの再描画
+				mGridView.invalidateViews();
+
+				break;
+
+			// スクロール
+			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+				// decodeのqueueをキャンセルする処理を記述
+				mScrolling = true;
+				break;
+
+			// フリック
+			case OnScrollListener.SCROLL_STATE_FLING:
+				// decodeのqueueをキャンセルする処理を記述
+				mScrolling = true;
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		/*
+		 * スクロール中
+		 * @see
+		 * android.widget.AbsListView.OnScrollListener#onScroll(android.widget
+		 * .AbsListView, int, int, int)
+		 */
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+
+			// 現在表示されているリストの末尾番号
+			int displayCount = firstVisibleItem + visibleItemCount;
+
+			// 初期でdisplayCountに数値が入ってるのに、totalItemCountが0の場合があるためスクロール中のみ判定するようにする
+			if (displayCount < totalItemCount - 25 || !mScrolling) {
+				return;
+			}
+
+			// APIリクエスト
+			request();
+		}
+	}
 
 }
