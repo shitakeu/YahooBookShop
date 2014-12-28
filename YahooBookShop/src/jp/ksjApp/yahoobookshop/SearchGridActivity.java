@@ -61,18 +61,22 @@ public class SearchGridActivity  extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_grid);
 		
+		final TextView searchView = (TextView) findViewById(R.id.searchView);
 		final Bundle ext = getIntent().getExtras();
 		if (ext != null) {
 			mSearchWord = ext.getString(Const.INTENT_KEY_SEARCH_WORD);
-			final TextView searchView = (TextView) findViewById(R.id.searchView);
 			if(TextUtils.isEmpty(mSearchWord)) {
 				searchView.setVisibility(View.GONE);
 			} else {
 				searchView.setVisibility(View.VISIBLE);
-				searchView.setText(mSearchWord + "　：で検索");
+				final StringBuffer strbuf = new StringBuffer();
+				strbuf.append("『");
+				strbuf.append(mSearchWord);
+				strbuf.append("』で検索した結果");
+				searchView.setText(strbuf);
 			}
 		} else {
-			
+			searchView.setVisibility(View.GONE);
 		}
 		
 		mGridView = (GridView) findViewById(R.id.gridView);
@@ -87,6 +91,9 @@ public class SearchGridActivity  extends Activity {
 		
 		mRankingAdapter = new RankingAdapter(context, new ArrayList<ItemData>(), mQueue, mPoint);
 		mGridView.setAdapter(mRankingAdapter);
+		
+		//読み込み中文言の表示
+		findViewById(R.id.loaingView).setVisibility(View.VISIBLE);
 		
 		request();
 	}
@@ -105,6 +112,7 @@ public class SearchGridActivity  extends Activity {
 				new Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
+						
 						JSONObject resultSet;
 						try {
 							final ArrayList<ItemData> itemData = new ArrayList<ItemData>();
@@ -140,10 +148,12 @@ public class SearchGridActivity  extends Activity {
 								mGridView.setOnScrollListener(null);
 							}
 							
+							//読み込み中文言の非表示
+							findViewById(R.id.loaingView).setVisibility(View.GONE);
+							
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						
 						isLoad = false;
 					}
 				},

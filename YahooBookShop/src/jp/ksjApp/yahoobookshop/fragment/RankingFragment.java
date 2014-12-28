@@ -50,6 +50,9 @@ public class RankingFragment extends Fragment {
 	
 	private boolean isLoad = false;
 	
+	// 読み込み中文言
+	private View mLoaingView;
+	
 	// 指定した順位を50位毎に表示
 	private int mOffset = 1;
 	// APIから取得する件数
@@ -79,6 +82,10 @@ public class RankingFragment extends Fragment {
 		mGridView.setAdapter(mRankingAdapter);
 		
 		mGridView.setOnScrollListener(new GridViewOnScrollListener());
+		
+		//読み込み中文言の表示
+		mLoaingView = view.findViewById(R.id.loaingView);
+		mLoaingView.setVisibility(View.VISIBLE);
 		
 		return view;
 	}
@@ -140,6 +147,9 @@ public class RankingFragment extends Fragment {
 								mGridView.setOnScrollListener(null);
 							}
 							
+							// 読み込み中文言の非表示
+							mLoaingView.setVisibility(View.GONE);
+						
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
