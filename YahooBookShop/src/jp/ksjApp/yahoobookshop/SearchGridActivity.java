@@ -1,99 +1,97 @@
-package jp.ksjApp.yahoobookshop.fragment;
+package jp.ksjApp.yahoobookshop;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import jp.ksjApp.yahoobookshop.Const;
-import jp.ksjApp.yahoobookshop.ItemData;
-import jp.ksjApp.yahoobookshop.R;
-import jp.ksjApp.yahoobookshop.adapter.RankingAdapter;
-import android.content.Context;
-import android.graphics.Point;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.GridView;
-import android.widget.AbsListView.OnScrollListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.Request.Method;
+import jp.ksjApp.yahoobookshop.adapter.RankingAdapter;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-public class RankingFragment extends Fragment {
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Display;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.GridView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.TextView;
+
+public class SearchGridActivity  extends Activity {
 
 	@SuppressWarnings("unused")
-	private static final String TAG = RankingFragment.class.getSimpleName();
+	private static final String TAG = SearchGridActivity.class.getSimpleName();
 
 	private RequestQueue mQueue;
 	private GridView mGridView;
 	private Point mPoint;
 	
+	RankingAdapter mRankingAdapter;
+	
+	private String mSearchWord;
+	
 	// スクロール中
 	private Boolean mScrolling = false;
 	
-	//本内のカテゴリID
-	private String mCategoryId;
-	
-	RankingAdapter mRankingAdapter;
-	
 	private boolean isLoad = false;
 	
-	// 指定した順位を50位毎に表示
+	// 指定した順位を20位毎に表示
 	private int mOffset = 1;
 	// APIから取得する件数
 	private static final int TOTAL_RESULTS_RETURNED = 50;
 	// 最大取得件数　
 	private static final int LIMIT_TOTAL_RESULTS = 200;
 	
-	public RankingFragment(String genreId) {
-		super();
-		mCategoryId = genreId;
-	}
-	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		final View view = inflater.inflate(R.layout.ranking_fragment, null);
-		mGridView = (GridView) view.findViewById(R.id.gridView);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_grid);
 		
-		final Context context = getActivity().getApplicationContext();
+		final Bundle ext = getIntent().getExtras();
+		if (ext != null) {
+			mSearchWord = ext.getString(Const.INTENT_KEY_SEARCH_WORD);
+			final TextView searchView = (TextView) findViewById(R.id.searchView);
+			if(TextUtils.isEmpty(mSearchWord)) {
+				searchView.setVisibility(View.GONE);
+			} else {
+				searchView.setVisibility(View.VISIBLE);
+				searchView.setText(mSearchWord + "　：で検索");
+			}
+		} else {
+			
+		}
+		
+		mGridView = (GridView) findViewById(R.id.gridView);
+		mGridView.setOnScrollListener(new GridViewOnScrollListener());
+		
+		final Context context = getApplicationContext();
 		mQueue = Volley.newRequestQueue(context);
 		
-		final Display disp = getActivity().getWindowManager().getDefaultDisplay();
+		final Display disp = getWindowManager().getDefaultDisplay();
 		mPoint = new Point();
 		disp.getSize(mPoint);
 		
 		mRankingAdapter = new RankingAdapter(context, new ArrayList<ItemData>(), mQueue, mPoint);
 		mGridView.setAdapter(mRankingAdapter);
 		
-		mGridView.setOnScrollListener(new GridViewOnScrollListener());
-		
-		return view;
+		request();
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		//request();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
+	
+	
 	private void request() {
 
 		if(isLoad){
@@ -111,12 +109,14 @@ public class RankingFragment extends Fragment {
 						try {
 							final ArrayList<ItemData> itemData = new ArrayList<ItemData>();
 							resultSet = response.getJSONObject("ResultSet").getJSONObject("0").getJSONObject("Result");
-							
 							final int totalResultsReturned = Integer.valueOf(response.getJSONObject("ResultSet").getString("totalResultsReturned"));
+							
 							for (int i = 0; i < totalResultsReturned; i++) {
 								final ItemData data = new ItemData();
 								final String index = String.valueOf(i);
 								JSONObject item = resultSet.getJSONObject(index);
+								Log.e(TAG, item.toString());
+								
 								data.name = item.getString("Name");
 								data.url = item.getString("Url");
 								data.thumbnailUrl = item.getJSONObject("ExImage").getString("Url");
@@ -152,7 +152,7 @@ public class RankingFragment extends Fragment {
 					public void onErrorResponse(VolleyError error) {
 						// エラー処理 error.networkResponseで確認
 						// エラー表示など
-						
+						Log.e(TAG, "onErrorResponse");
 						isLoad = false;
 					}
 				}));
@@ -166,16 +166,24 @@ public class RankingFragment extends Fragment {
 		final StringBuffer strbuf = new StringBuffer();
 		strbuf.append(Const.YAHOO_SHOP_CATEGORY_RANKING_API_URL);
 		strbuf.append("&");
-		strbuf.append("category_id=" + mCategoryId);
+		strbuf.append("category_id=" + Const.BOOK_GENRE_MAIN);
 		strbuf.append("&");
 		strbuf.append("offset=" + mOffset);
-
+		
+		try {
+			final String query = URLEncoder.encode(mSearchWord, "UTF-8") ;
+			strbuf.append("&");
+			strbuf.append("query=" + query );
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
 		if(Const._DEBUG_){
 			Log.d(TAG, "url : " + strbuf.toString());
 		}
 		return strbuf.toString();
 	}
+	
 	
 	/*
 	 * スクローラーの状態検知
@@ -246,5 +254,4 @@ public class RankingFragment extends Fragment {
 			request();
 		}
 	}
-
 }

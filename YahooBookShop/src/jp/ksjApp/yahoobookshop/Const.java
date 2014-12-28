@@ -59,7 +59,7 @@ public class Const {
 	public static final String BOOK_GENRE_LEARNING = "11270";
 	
 	
-	public static final String INTENT_KEY_SEARCH_GENRE_ID = "search_genre_id";
-	public static final String INTENT_KEY_SEARCH_GENRE_TITLE = "search_genre_title";
+	// Intent Key
+	public static final String INTENT_KEY_SEARCH_WORD = "search_word";
 
 }
