@@ -71,8 +71,10 @@ public class RankingAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.imageView = (ImageView) convertView
 					.findViewById(R.id.img_thumbnail);
-			holder.textView = (TextView) convertView
+			holder.nameView = (TextView) convertView
 					.findViewById(R.id.text_name);
+			holder.priceView = (TextView) convertView
+					.findViewById(R.id.text_price);
 
 			final int imgWidth = (int)mPoint.x / 2;
 			holder.imageView.setMinimumWidth(imgWidth);
@@ -95,9 +97,10 @@ public class RankingAdapter extends BaseAdapter {
 				android.R.drawable.ic_dialog_alert /* エラー時の画像 */);
 		mImageLoader.get(imageUrl, listener); /* URLから画像を取得する */
 
-		holder.textView.setText(item.name);
+		holder.nameView.setText(item.name);
+		holder.priceView .setText(item.price + "円");
 		
-		final int height = holder.imageView.getHeight() + holder.textView.getHeight();
+		final int height = holder.imageView.getHeight() + holder.nameView.getHeight() + holder.priceView.getHeight();
 		convertView.setMinimumHeight(height);
 
 		convertView.setOnClickListener(new OnClickListener() {
@@ -117,7 +120,8 @@ public class RankingAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 		ImageView imageView;
-		TextView textView;
+		TextView nameView;
+		TextView priceView;
 	}
 
 	/**
