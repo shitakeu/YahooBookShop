@@ -95,7 +95,7 @@ public class RankingAdapter extends BaseAdapter {
 		// コンテンツの更新
 		final String imageUrl = item.thumbnailUrl;
 		ImageListener listener = ImageLoader.getImageListener(holder.imageView,
-				android.R.drawable.spinner_background /* 表示待ち時の画像 */,
+				R.drawable.loading /* 表示待ち時の画像 */,
 				android.R.drawable.ic_dialog_alert /* エラー時の画像 */);
 		mImageLoader.get(imageUrl, listener); /* URLから画像を取得する */
 

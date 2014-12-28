@@ -86,7 +86,7 @@ public class RankingFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//request();
+		request();
 	}
 
 	@Override
