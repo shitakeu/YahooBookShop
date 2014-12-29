@@ -30,7 +30,7 @@ public class VolleyHelper {
 //            	mQueue = new RequestQueue(cache, network);
 //            	mQueue.start();
             	
-            	mQueue = Volley.newRequestQueue(context);
+            	mQueue = Volley.newRequestQueue(context.getApplicationContext());
             }
             return mQueue;
         }
