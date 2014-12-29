@@ -13,11 +13,11 @@ public class Const {
 	public static final String YAHOO_AFFILIATEI_ID = "onlgl89gRKBbvvpOFlOZ";
 
 	// ※ランキングAPIに不具合があったためこちらは使わない
-	// YahooショッピングカテゴリランキングAPI
+	// Yahooショッピング カテゴリランキングAPI
 	// http://developer.yahoo.co.jp/webapi/shopping/shopping/v1/categoryranking.html
 //	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?affiliate_type=yid&appid="
 //			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
-	
+	// 
 	public static final String YAHOO_SHOP_CATEGORY_RANKING_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?affiliate_type=yid&hits=50&image_size=300&appid="
 			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
 	
@@ -27,6 +27,12 @@ public class Const {
 	public static final String YAHOO_SHOP_SEARCH_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?affiliate_type=yid&hits=50&appid="
 			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
 
+	// Yahooショッピング  おすすめ情報モジュール
+	// http://developer.yahoo.co.jp/webapi/shopping/shopping/v1/getmodule.html
+	public static final String YAHOO_SHOP_EVENT_API_URL = "http://shopping.yahooapis.jp/ShoppingWebService/V1/json/getModule?position=basicpromotion&category_id=10002&appid="
+			+ YAHOO_APP_ID + "&affiliate_id=" + YAHOO_AFFILIATEI_ID;
+	
+	
 	// 性別タイプ
 	public static final int GENDER_MALE = 0;
 	public static final int GENDER_FEMALE = 1;

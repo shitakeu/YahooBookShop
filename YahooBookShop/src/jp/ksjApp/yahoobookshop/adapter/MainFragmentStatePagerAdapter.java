@@ -1,105 +1,75 @@
 package jp.ksjApp.yahoobookshop.adapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import jp.ksjApp.yahoobookshop.Const;
+import jp.ksjApp.yahoobookshop.fragment.EventFragment;
 import jp.ksjApp.yahoobookshop.fragment.RankingFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class MainFragmentStatePagerAdapter
-  extends FragmentStatePagerAdapter {
+public class MainFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
 
-  public MainFragmentStatePagerAdapter(FragmentManager fm) {
-    super(fm);
-  }
+	// 表示するカテゴリ
+	// ここを編集することで順番や表示カテゴリを編集できる
+	private ArrayList<String> mCategoryList = new ArrayList<String>() {
+		{
+			add("キャンペーン");
+			add("総合");
+			add("コミック、アニメ");
+			add("文芸書籍");
+			add("雑誌");
+			add("ビジネス");
+			add("エンターテインメント");
+			add("IT");
+			add("生活");
+			add("趣味");
+			add("写真集");
+//			add("歴史、教養");
+//			add("学習");
+		}
+	};
 
-  @Override
-  public Fragment getItem(int i) {
+	// カテゴリを管理するMap
+	// 新たにカテゴリを追加する際はここに記載する
+	private HashMap<String, Fragment> mCategoryMap = new HashMap<String, Fragment>() {
+		{
+			put("キャンペーン", new EventFragment());
+			put("総合", new RankingFragment(Const.BOOK_GENRE_MAIN));
+			put("コミック、アニメ", new RankingFragment(Const.BOOK_GENRE_COMIC));
+			put("文芸書籍", new RankingFragment(Const.BOOK_GENRE_LITERATURE));
+			put("雑誌", new RankingFragment(Const.BOOK_GENRE_MAGAZINE));
+			put("写真集", new RankingFragment(Const.BOOK_GENRE_PHOTO));
+			put("ビジネス", new RankingFragment(Const.BOOK_GENRE_BUSINESS));
+			put("IT", new RankingFragment(Const.BOOK_GENRE_COMPUTER));
+			put("エンターテインメント", new RankingFragment(
+					Const.BOOK_GENRE_ENTERTAINMENT));
+			put("生活", new RankingFragment(Const.BOOK_GENRE_LIFE));
+			put("趣味", new RankingFragment(Const.BOOK_GENRE_HOBBY));
+			put("歴史、教養", new RankingFragment(Const.BOOK_GENRE_HISTORY));
+			put("学習", new RankingFragment(Const.BOOK_GENRE_LEARNING));
+		}
+	};
 
-    switch(i){
-    case 0:
-    	// 総合ランキング
-    	return new RankingFragment(Const.BOOK_GENRE_MAIN);
-    case 1:
-    	return new RankingFragment(Const.BOOK_GENRE_COMIC);
-    case 2:
-    	return new RankingFragment(Const.BOOK_GENRE_LITERATURE);
-    case 3:
-    	return new RankingFragment(Const.BOOK_GENRE_MAGAZINE);
-    case 4:
-    	return new RankingFragment(Const.BOOK_GENRE_PHOTO);
-    case 5:
-    	return new RankingFragment(Const.BOOK_GENRE_BUSINESS);
-    case 6:
-    	return new RankingFragment(Const.BOOK_GENRE_COMPUTER);
-    case 7:
-    	return new RankingFragment(Const.BOOK_GENRE_ENTERTAINMENT);
-    case 8:
-    	return new RankingFragment(Const.BOOK_GENRE_LIFE);
-    case 9:
-    	return new RankingFragment(Const.BOOK_GENRE_HOBBY);
-    case 10:
-    	return new RankingFragment(Const.BOOK_GENRE_HISTORY);
-    case 11:
-    	return new RankingFragment(Const.BOOK_GENRE_LEARNING);
-    default:
-    	return new RankingFragment(Const.BOOK_GENRE_MAIN);
-    }
-
-  }
-
-  @Override
-  public int getCount() {
-    return 12;
-  }
-
-  @Override
-  public CharSequence getPageTitle(int position) {
-	  
-	  String titleName = "";
-	  switch (position) {
-	  case 0:
-		  titleName = "総合ランキング";
-		  break;
-	  case 1:
-		  titleName = "コミック、アニメ";
-		  break;
-	  case 2:
-		  titleName = "文芸書籍";
-		break;
-	  case 3:
-		  titleName = "雑誌";
-		break;
-	  case 4:
-		  titleName = "写真集";
-		break;
-	  case 5:
-		  titleName = "ビジネス";
-		break;
-	  case 6:
-		  titleName = "コンピュータ";
-		break;
-	  case 7:
-		  titleName = "エンターテインメント";
-		break;
-	  case 8:
-		  titleName = "生活";
-		break;
-	  case 9:
-		  titleName = "趣味";
-		break;
-	  case 10:
-		  titleName = "歴史、心理、教育";
-		break;
-	  case 11:
-		  titleName = "学習";
-		break;
-	  default:
-		  titleName = "その他";
-		break;
+	public MainFragmentStatePagerAdapter(FragmentManager fm) {
+		super(fm);
 	}
-	  
-    return titleName;
-  }
 
+	@Override
+	public Fragment getItem(int i) {
+		 final String categoryName = mCategoryList.get(i);
+		 return mCategoryMap.get(categoryName);
+	}
+
+	@Override
+	public int getCount() {
+		return mCategoryList.size();
+	}
+
+	@Override
+	public CharSequence getPageTitle(int position) {
+		return mCategoryList.get(position);
+	}
 }

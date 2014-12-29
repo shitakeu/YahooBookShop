@@ -30,7 +30,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 
 	private void setupView() {
-		
 		final EditText editText = (EditText) findViewById(R.id.edit_word);
 		editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -47,6 +46,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		
 		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(new MainFragmentStatePagerAdapter(getSupportFragmentManager()));
+		viewPager.setCurrentItem(1);
 	}
 	
 	@Override

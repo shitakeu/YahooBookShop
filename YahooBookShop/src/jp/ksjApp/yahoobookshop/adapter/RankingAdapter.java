@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.LruCache;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class RankingAdapter extends BaseAdapter {
@@ -77,6 +79,8 @@ public class RankingAdapter extends BaseAdapter {
 					.findViewById(R.id.text_price);
 			holder.publisherView = (TextView) convertView
 					.findViewById(R.id.text_publisher);
+			holder.descriptionLayout = (LinearLayout) convertView
+					.findViewById(R.id.layout_description);
 
 			final int imgWidth = (int)mPoint.x / 2;
 			holder.imageView.setMinimumWidth(imgWidth);
@@ -100,8 +104,14 @@ public class RankingAdapter extends BaseAdapter {
 		mImageLoader.get(imageUrl, listener); /* URLから画像を取得する */
 
 		holder.nameView.setText(item.name);
-		holder.priceView.setText(item.price + "円");
-		holder.publisherView.setText(item.publisherName);
+		
+		if(TextUtils.isEmpty(item.price) && TextUtils.isEmpty(item.publisherName)){
+			holder.descriptionLayout.setVisibility(View.GONE);
+		} else {
+			holder.descriptionLayout.setVisibility(View.VISIBLE);
+			holder.priceView.setText(item.price + "円");
+			holder.publisherView.setText(item.publisherName);
+		}
 		
 		final int height = holder.imageView.getHeight() + holder.nameView.getHeight() + holder.priceView.getHeight();
 		convertView.setMinimumHeight(height);
@@ -126,6 +136,7 @@ public class RankingAdapter extends BaseAdapter {
 		TextView nameView;
 		TextView priceView;
 		TextView publisherView;
+		LinearLayout descriptionLayout;
 	}
 
 	/**
