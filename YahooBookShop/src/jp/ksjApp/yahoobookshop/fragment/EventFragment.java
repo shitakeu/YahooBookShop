@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jp.ksjApp.yahoobookshop.Const;
 import jp.ksjApp.yahoobookshop.ItemData;
 import jp.ksjApp.yahoobookshop.R;
+import jp.ksjApp.yahoobookshop.VolleyHelper;
 import jp.ksjApp.yahoobookshop.adapter.RankingAdapter;
 import android.content.Context;
 import android.graphics.Point;
@@ -61,7 +62,7 @@ public class EventFragment extends Fragment {
 		mGridView = (GridView) view.findViewById(R.id.gridView);
 		
 		final Context context = getActivity().getApplicationContext();
-		mQueue = Volley.newRequestQueue(context);
+		mQueue = VolleyHelper.getRequestQueue(context);
 		
 		final Display disp = getActivity().getWindowManager().getDefaultDisplay();
 		mPoint = new Point();
@@ -73,19 +74,8 @@ public class EventFragment extends Fragment {
 		//読み込み中文言の表示
 		mLoaingView = view.findViewById(R.id.loaingView);
 		mLoaingView.setVisibility(View.VISIBLE);
-		
-		return view;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
 		request();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
+		return view;
 	}
 
 	private void request() {

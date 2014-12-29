@@ -63,7 +63,7 @@ public class RankingAdapter extends BaseAdapter {
 	public void addItem(ArrayList<ItemData> itemData) {
 		mItemData.addAll(itemData);
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;

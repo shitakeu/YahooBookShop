@@ -22,8 +22,11 @@
         <Button
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/item_text_selector"
             android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:textSize="12sp"
             android:text="検索" />
     </LinearLayout>
 
@@ -36,10 +39,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#CCCCCC"
+            android:background="#000000"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:textColor="#000000" />
+            android:textColor="#ffffff" />
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>

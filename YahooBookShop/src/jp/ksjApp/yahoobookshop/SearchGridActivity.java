@@ -83,7 +83,7 @@ public class SearchGridActivity  extends Activity {
 		mGridView.setOnScrollListener(new GridViewOnScrollListener());
 		
 		final Context context = getApplicationContext();
-		mQueue = Volley.newRequestQueue(context);
+		mQueue = VolleyHelper.getRequestQueue(context);
 		
 		final Display disp = getWindowManager().getDefaultDisplay();
 		mPoint = new Point();
